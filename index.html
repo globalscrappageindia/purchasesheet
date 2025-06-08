@@ -101,8 +101,12 @@
   </section>
 
   <section id="download">
-    <h2>Download</h2>
-    <p>Coming soon...</p>
+<h2>Download Sheets</h2>
+<label>Select Date: <input type="date" id="downloadDate" /></label>
+<br><br>
+<button onclick="downloadPDF('full')">Download Full Sheet PDF</button>
+<button onclick="downloadPDF('trimmed')">Download Trimmed Sheet PDF</button>
+
   </section>
 
   <section id="admin">
@@ -198,6 +202,18 @@
 
       document.getElementById("submitMsg").innerText = "✅ Entry submitted!";
     }
+    function downloadPDF(type) {
+  const date = document.getElementById("downloadDate").value;
+  if (!date) {
+    alert("Please select a date.");
+    return;
+  }
+
+  const baseURL = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec";
+  const url = `${baseURL}?exportType=${type}&date=${date}`;
+  window.open(url, '_blank');
+}
+
   </script>
 </body>
 </html>
