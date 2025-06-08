@@ -124,9 +124,12 @@
   </section>
 
   <section id="edit">
-    <h2>Edit Panel</h2>
-    <p>Coming soon...</p>
-  </section>
+  <h2>Edit Entries (Admin Only)</h2>
+  <label>Select Date: <input type="date" id="editDate" /></label>
+  <button onclick="fetchEntries()">Fetch Entries</button>
+  <div id="editTable" style="margin-top: 20px;"></div>
+</section>
+
 
   <section id="passwordSection" style="display: none;">
     <h3>Enter Password</h3>
@@ -273,6 +276,49 @@ function checkPassword() {
         status.textContent = "❌ Error: " + err.message;
       });
   }
+
+function fetchEntries() {
+  const date = document.getElementById("editDate").value;
+  const tableDiv = document.getElementById("editTable");
+  tableDiv.innerHTML = "";
+
+  if (!date) {
+    alert("Please select a date.");
+    return;
+  }
+
+  fetch(`${SCRIPT_URL}?mode=fetch&date=${date}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.length) {
+        tableDiv.innerHTML = "<p>No entries found.</p>";
+        return;
+      }
+
+      const headers = Object.keys(data[0]);
+      let html = "<table border='1' cellpadding='6' style='border-collapse:collapse;'><thead><tr>";
+      headers.forEach(h => html += `<th>${h}</th>`);
+      html += "<th>Delete</th></tr></thead><tbody>";
+
+      data.forEach((row, idx) => {
+        html += `<tr data-row="${idx}">`;
+        headers.forEach(h => {
+          html += `<td><input style="width: 140px;" value="${row[h]}" data-col="${h}"></td>`;
+        });
+        html += `<td><button onclick="deleteRow(${idx})">Delete</button></td>`;
+        html += `</tr>`;
+      });
+
+      html += "</tbody></table><br><button onclick='saveAllEdits()'>Save All Changes</button>";
+      tableDiv.innerHTML = html;
+    })
+    .catch(err => {
+      console.error(err);
+      tableDiv.innerHTML = "❌ Error fetching entries.";
+    });
+}
+
+  
 </script>
 
 
