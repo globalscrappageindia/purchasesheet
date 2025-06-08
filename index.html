@@ -47,9 +47,11 @@
       padding: 10px 20px;
       margin-top: 10px;
     }
-    #logo {
-      height: 40px;
-    }
+   #logo {
+  height: 60px;
+  margin-right: 10px;
+}
+
     #submitMsg {
       margin-top: 10px;
       color: green;
@@ -107,8 +109,10 @@
     <input type="date" id="pdfDate" max="">
   </div>
   <div class="form-field">
-    <button onclick="downloadPDF('full')">Download Full Sheet PDF</button>
-    <button onclick="downloadPDF('trimmed')">Download Trimmed Sheet PDF</button>
+    <div id="fullDownloadSection" style="display: none;">
+  <button onclick="downloadPDF('full')">Download Full Sheet PDF (Admin Only)</button>
+</div>
+<button onclick="downloadPDF('trimmed')">Download Trimmed Sheet PDF</button>
   </div>
   <div id="downloadStatus" style="margin-top: 15px; color: green;"></div>
 </section>
@@ -152,16 +156,25 @@
       document.getElementById("passwordSection").style.display = "block";
     }
 
-    function checkPassword() {
-      const pw = document.getElementById("passwordInput").value;
-      if (pw === passwords[targetTab]) {
-        document.getElementById("passwordSection").style.display = "none";
-        showTab(targetTab);
-        document.getElementById("pwError").innerText = "";
-      } else {
-        document.getElementById("pwError").innerText = "❌ Invalid password";
-      }
+    let userRole = ""; // add this at the top with other global vars
+
+function checkPassword() {
+  const pw = document.getElementById("passwordInput").value;
+  if (pw === passwords[targetTab]) {
+    userRole = targetTab;
+    document.getElementById("passwordSection").style.display = "none";
+    showTab(targetTab);
+    document.getElementById("pwError").innerText = "";
+
+    // Show full download button only to admin
+    if (targetTab === "admin") {
+      document.getElementById("fullDownloadSection").style.display = "block";
     }
+  } else {
+    document.getElementById("pwError").innerText = "❌ Invalid password";
+  }
+}
+
 
     function toggleEntryType() {
       const type = document.getElementById("entryType").value;
