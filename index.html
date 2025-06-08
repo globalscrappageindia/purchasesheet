@@ -336,6 +336,43 @@ function deleteRow(index) {
     })
     .catch(err => alert("❌ Error: " + err.message));
 }
+function saveAllEdits() {
+  const table = document.querySelector("#editTable table");
+  if (!table) return;
+
+  const rows = [...table.querySelectorAll("tbody tr")];
+  const headers = [...table.querySelectorAll("thead th")].map(th => th.innerText).filter(h => h !== "Delete");
+
+  const date = document.getElementById("editDate").value;
+  const updatedRows = [];
+
+  rows.forEach(tr => {
+    const cells = tr.querySelectorAll("td input");
+    let rowData = {};
+    headers.forEach((header, idx) => {
+      rowData[header] = cells[idx].value;
+    });
+    updatedRows.push(rowData);
+  });
+
+  fetch(`${SCRIPT_URL}?mode=save&date=${date}`, {
+    method: "POST",
+    body: JSON.stringify(updatedRows),
+    contentType: "application/json"
+  })
+    .then(res => res.text())
+    .then(msg => {
+      if (msg === "OK") {
+        alert("✅ Changes saved successfully.");
+        fetchEntries(); // refresh updated view
+      } else {
+        alert("❌ Save failed: " + msg);
+      }
+    })
+    .catch(err => {
+      alert("❌ Save error: " + err.message);
+    });
+}
 
   
   
