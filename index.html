@@ -136,11 +136,26 @@
         codAmount: document.getElementById("codAmount").value
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec", {
-        method: "POST",
-        body: JSON.stringify({ action: "submit", data }),
-        headers: { "Content-Type": "application/json" }
-      })
+     const params = new URLSearchParams({
+  action: "submit",
+  data: JSON.stringify(data)
+});
+
+fetch("https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec" + params.toString())
+  .then(res => res.json())
+  .then(res => {
+    if (res.success) {
+      document.getElementById("submitMsg").innerText = "✅ Entry submitted!";
+    } else {
+      document.getElementById("submitMsg").innerText = "❌ Error submitting entry.";
+      console.error(res);
+    }
+  })
+  .catch(err => {
+    console.error("Error:", err);
+    document.getElementById("submitMsg").innerText = "❌ Network error.";
+  });
+
       .then(r => r.json())
       .then(res => {
         if (res.success) {
