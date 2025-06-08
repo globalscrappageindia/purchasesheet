@@ -118,10 +118,18 @@
 </section>
 
 
-  <section id="admin">
-    <h2>Admin Panel</h2>
-    <p>Coming soon...</p>
-  </section>
+<section id="admin">
+  <h2>Admin Panel</h2>
+  <p>You can download the full purchase sheet below.</p>
+
+  <label>Select Date:</label>
+  <input type="date" id="adminPdfDate" max="">
+  <br><br>
+
+  <button onclick="downloadAdminPDF()">Download Full Purchase Sheet PDF</button>
+  <div id="adminDownloadStatus" style="margin-top: 10px; color: green;"></div>
+</section>
+
 
   <section id="edit">
   <h2>Edit Entries (Admin Only)</h2>
@@ -374,7 +382,36 @@ function saveAllEdits() {
     });
 }
 
-  
+ function downloadAdminPDF() {
+  const date = document.getElementById("adminPdfDate").value;
+  const status = document.getElementById("adminDownloadStatus");
+
+  if (!date) {
+    status.textContent = "❗ Please select a date.";
+    return;
+  }
+
+  const url = `${SCRIPT_URL}?type=full&date=${date}`;
+  status.textContent = "⏳ Generating PDF...";
+
+  fetch(url)
+    .then(res => res.text())
+    .then(link => {
+      const cleanUrl = link.trim();
+      if (cleanUrl.startsWith("http")) {
+        window.open(cleanUrl, "_blank");
+        status.textContent = "✅ PDF opened in new tab.";
+      } else if (cleanUrl === "NO_ENTRIES") {
+        status.textContent = "⚠️ No entries found for this date.";
+      } else {
+        status.textContent = "❌ Error: " + cleanUrl;
+      }
+    })
+    .catch(err => {
+      status.textContent = "❌ Error: " + err.message;
+    });
+}
+ 
   
 </script>
 
