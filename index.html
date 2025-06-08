@@ -1,188 +1,203 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Global Scrappage Portal</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-    #tabs { display: flex; background: #eee; padding: 10px; }
-    .tab { margin-right: 20px; cursor: pointer; font-weight: bold; }
-    .tab.active { border-bottom: 2px solid blue; }
-    .section { display: none; padding: 20px; }
-    .visible { display: block; }
-    .form-field { margin-bottom: 10px; }
-    label { display: inline-block; width: 200px; }
-    input, select { padding: 6px; width: 200px; }
-    button { padding: 10px 20px; margin-top: 10px; }
-    img.logo { height: 50px; margin: 10px 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    header {
+      background: #eee;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    nav a {
+      margin: 0 10px;
+      font-weight: bold;
+      text-decoration: none;
+      color: black;
+      cursor: pointer;
+    }
+    nav a.active {
+      border-bottom: 2px solid blue;
+    }
+    section {
+      display: none;
+      padding: 20px;
+    }
+    section.visible {
+      display: block;
+    }
+    .form-field {
+      margin: 10px 0;
+    }
+    label {
+      display: inline-block;
+      width: 220px;
+    }
+    input, select {
+      padding: 6px;
+      width: 200px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+    #logo {
+      height: 40px;
+    }
+    #submitMsg {
+      margin-top: 10px;
+      color: green;
+    }
   </style>
 </head>
 <body>
 
-<div id="tabs">
-  <img src="https://globalscrappageyardsindia.wordpress.com/wp-content/uploads/2024/07/global-1-1.png" class="logo">
-  <div class="tab active" onclick="showTab('form')">Form</div>
-  <div class="tab" onclick="showTab('download')">Download</div>
-  <div class="tab" onclick="checkPassword('admin')">Admin</div>
-  <div class="tab" onclick="checkPassword('edit')">Edit</div>
-</div>
+  <header>
+    <img id="logo" src="https://globalscrappageyardsindia.wordpress.com/wp-content/uploads/2024/07/global-1-1.png" alt="Logo" />
+    <nav>
+      <a class="tab active" onclick="showTab('form')">Form</a>
+      <a class="tab" onclick="showTab('download')">Download</a>
+      <a class="tab" onclick="passwordPrompt('admin')">Admin</a>
+      <a class="tab" onclick="passwordPrompt('edit')">Edit</a>
+    </nav>
+  </header>
 
-<!-- FORM -->
-<div id="form" class="section visible">
-  <h2>Daily Purchase Entry</h2>
+  <section id="form" class="visible">
+    <h2>Daily Purchase Entry</h2>
 
-  <div class="form-field">
-    <label>Entry Type:</label>
-    <select id="entryType" onchange="toggleFields()">
-      <option value="Vehicle">Vehicle</option>
-      <option value="COD">COD</option>
-    </select>
-  </div>
+    <div class="form-field">
+      <label>Entry Type:</label>
+      <select id="entryType" onchange="toggleEntryType()">
+        <option value="Vehicle">Vehicle</option>
+        <option value="COD">COD</option>
+      </select>
+    </div>
 
-  <div id="vehicleFields">
-    <div class="form-field"><label>Vehicle No.:</label><input id="vehicleNo"></div>
-    <div class="form-field"><label>Place of Purchase:</label><input id="place"></div>
-    <div class="form-field"><label>Make:</label><input id="make"></div>
-    <div class="form-field"><label>Unladen Weight (kg):</label><input id="weight"></div>
-    <div class="form-field"><label>Payment to Dealer/RO:</label><input id="paymentDealer"></div>
-    <div class="form-field"><label>Payment to Commission:</label><input id="paymentCommission"></div>
-    <div class="form-field"><label>Towing Charges:</label><input id="towing"></div>
-    <div class="form-field"><label>COD Buyback:</label><input id="codBuyback"></div>
-    <div class="form-field"><label>Total:</label><input id="total" readonly></div>
-  </div>
+    <div id="vehicleFields">
+      <div class="form-field"><label>Vehicle No.:</label><input id="vehicleNo"></div>
+      <div class="form-field"><label>Place of Purchase:</label><input id="place"></div>
+      <div class="form-field"><label>Make:</label><input id="make"></div>
+      <div class="form-field"><label>Unladen Weight (kg):</label><input id="weight"></div>
+      <div class="form-field"><label>Payment to Dealer/RO:</label><input id="paymentDealer"></div>
+      <div class="form-field"><label>Payment to Commission:</label><input id="paymentCommission"></div>
+      <div class="form-field"><label>Towing Charges:</label><input id="towing"></div>
+      <div class="form-field"><label>COD Buyback:</label><input id="codBuyback"></div>
+      <div class="form-field"><label>Total:</label><input id="total" readonly></div>
+    </div>
 
-  <div id="codFields" style="display:none;">
-    <div class="form-field"><label>COD No.:</label><input id="codNo"></div>
-    <div class="form-field"><label>COD Purchase Amount:</label><input id="codAmount"></div>
-  </div>
+    <div id="codFields" style="display:none;">
+      <div class="form-field"><label>COD No.:</label><input id="codNo"></div>
+      <div class="form-field"><label>COD Purchase Amount:</label><input id="codAmount"></div>
+    </div>
 
-  <button onclick="submitEntry()">Submit Entry</button>
-  <p id="submitMsg" style="color:green;"></p>
-</div>
+    <button onclick="submitEntry()">Submit Entry</button>
+    <p id="submitMsg"></p>
+  </section>
 
-<!-- DOWNLOAD -->
-<div id="download" class="section">
-  <h2>Download Section</h2>
-  <p>Coming soon...</p>
-</div>
+  <section id="download">
+    <h2>Download</h2>
+    <p>Coming soon...</p>
+  </section>
 
-<!-- ADMIN -->
-<div id="admin" class="section">
-  <h2>Admin Panel</h2>
-  <p>Coming soon...</p>
-</div>
+  <section id="admin">
+    <h2>Admin Panel</h2>
+    <p>Coming soon...</p>
+  </section>
 
-<!-- EDIT -->
-<div id="edit" class="section">
-  <h2>Edit Panel</h2>
-  <p>Coming soon...</p>
-</div>
+  <section id="edit">
+    <h2>Edit Panel</h2>
+    <p>Coming soon...</p>
+  </section>
 
-<!-- PASSWORD PROMPT -->
-<div id="passwordPrompt" class="section">
-  <h2>Enter Password</h2>
-  <input type="password" id="pwInput" placeholder="Enter password">
-  <button onclick="submitPassword()">Submit</button>
-  <p id="pwError" style="color:red;"></p>
-</div>
+  <section id="passwordSection" style="display: none;">
+    <h3>Enter Password</h3>
+    <input type="password" id="passwordInput" />
+    <button onclick="checkPassword()">Submit</button>
+    <p id="pwError" style="color:red;"></p>
+  </section>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    toggleEntryType();
-    document.getElementById("entryType").addEventListener("change", toggleEntryType);
+  <script>
+    const passwords = {
+      admin: "admin456",
+      edit: "admin456"
+    };
+    let targetTab = "";
 
-    ["paymentDealer", "paymentCommission", "towing", "codBuyback"].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener("input", () => {
-          const sum = ["paymentDealer", "paymentCommission", "towing", "codBuyback"]
-            .map(f => parseFloat(document.getElementById(f).value) || 0)
-            .reduce((a, b) => a + b, 0);
-          document.getElementById("total").value = sum;
-        });
-      }
-    });
-  });
-
-  let requestedTab = null;
-  const passwords = { admin: "admin456", edit: "admin456" };
-
-  function showTab(tab) {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("visible"));
-    document.querySelector(`.tab[onclick*="${tab}"]`).classList.add("active");
-    document.getElementById(tab).classList.add("visible");
-  }
-
-  function verifyPassword(tab) {
-    requestedTab = tab;
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("visible"));
-    document.getElementById("adminPasswordPrompt").classList.add("visible");
-  }
-
-  function submitPassword() {
-    const pw = document.getElementById("passwordInput").value;
-    if (pw === passwords[requestedTab]) {
-      showTab(requestedTab);
-      document.getElementById("msg").innerText = "";
-      document.getElementById("passwordInput").value = "";
-    } else {
-      document.getElementById("msg").innerText = "❌ Invalid password";
+    function showTab(id) {
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll("section").forEach(s => s.classList.remove("visible"));
+      document.querySelector(`.tab[onclick*='${id}']`).classList.add("active");
+      document.getElementById(id).classList.add("visible");
     }
-  }
 
-  function toggleEntryType() {
-    const type = document.getElementById("entryType").value;
-    document.getElementById("vehicleFields").style.display = type === "Vehicle" ? "block" : "none";
-    document.getElementById("codFields").style.display = type === "COD" ? "block" : "none";
-  }
-function submitEntry() {
-  const type = document.getElementById("entryType").value;
-  const params = new URLSearchParams({
-    entryType: type,
-    vehicleNo: document.getElementById("vehicleNo").value,
-    place: document.getElementById("place").value,
-    make: document.getElementById("make").value,
-    weight: document.getElementById("weight").value,
-    paymentDealer: document.getElementById("paymentDealer").value,
-    paymentCommission: document.getElementById("paymentCommission").value,
-    towing: document.getElementById("towing").value,
-    codBuyback: document.getElementById("codBuyback").value,
-    total: document.getElementById("total").value,
-    codNo: document.getElementById("codNo").value,
-    codAmount: document.getElementById("codAmount").value
-  });
+    function passwordPrompt(tab) {
+      targetTab = tab;
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll("section").forEach(s => s.classList.remove("visible"));
+      document.getElementById("passwordSection").style.display = "block";
+    }
 
-  const scriptURL = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec";
-  const fullURL = `${scriptURL}?${params.toString()}`;
+    function checkPassword() {
+      const pw = document.getElementById("passwordInput").value;
+      if (pw === passwords[targetTab]) {
+        document.getElementById("passwordSection").style.display = "none";
+        showTab(targetTab);
+        document.getElementById("pwError").innerText = "";
+      } else {
+        document.getElementById("pwError").innerText = "❌ Invalid password";
+      }
+    }
 
-  // Redirect browser (or open new tab silently)
-  window.open(fullURL, "_blank");  // or use _self if you want to redirect
+    function toggleEntryType() {
+      const type = document.getElementById("entryType").value;
+      document.getElementById("vehicleFields").style.display = type === "Vehicle" ? "block" : "none";
+      document.getElementById("codFields").style.display = type === "COD" ? "block" : "none";
+    }
 
-  // Show feedback to user
-  document.getElementById("submitMsg").innerText = "✅ Entry submitted!";
-}
-
-
-    const url = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec" + params.toString();
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById("submitMsg").innerHTML = "✅ Entry submitted!";
-        } else {
-          document.getElementById("submitMsg").innerHTML = "❌ Submission failed.";
+    document.addEventListener("DOMContentLoaded", () => {
+      toggleEntryType();
+      ["paymentDealer", "paymentCommission", "towing", "codBuyback"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", () => {
+            const sum = ["paymentDealer", "paymentCommission", "towing", "codBuyback"]
+              .map(id => parseFloat(document.getElementById(id).value) || 0)
+              .reduce((a, b) => a + b, 0);
+            document.getElementById("total").value = sum;
+          });
         }
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById("submitMsg").innerHTML = "❌ Error submitting entry.";
       });
-  }
-</script>
+    });
 
+    function submitEntry() {
+      const type = document.getElementById("entryType").value;
+      const params = new URLSearchParams({
+        entryType: type,
+        vehicleNo: document.getElementById("vehicleNo").value,
+        place: document.getElementById("place").value,
+        make: document.getElementById("make").value,
+        weight: document.getElementById("weight").value,
+        paymentDealer: document.getElementById("paymentDealer").value,
+        paymentCommission: document.getElementById("paymentCommission").value,
+        towing: document.getElementById("towing").value,
+        codBuyback: document.getElementById("codBuyback").value,
+        total: document.getElementById("total").value,
+        codNo: document.getElementById("codNo").value,
+        codAmount: document.getElementById("codAmount").value
+      });
 
+      const scriptURL = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec";
+      const fullURL = `${scriptURL}?${params.toString()}`;
+      window.open(fullURL, "_blank"); // or use _self if you want to stay on same tab
+
+      document.getElementById("submitMsg").innerText = "✅ Entry submitted!";
+    }
+  </script>
 </body>
 </html>
