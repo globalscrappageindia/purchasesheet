@@ -137,23 +137,33 @@
     document.getElementById("vehicleFields").style.display = type === "Vehicle" ? "block" : "none";
     document.getElementById("codFields").style.display = type === "COD" ? "block" : "none";
   }
+function submitEntry() {
+  const type = document.getElementById("entryType").value;
+  const params = new URLSearchParams({
+    entryType: type,
+    vehicleNo: document.getElementById("vehicleNo").value,
+    place: document.getElementById("place").value,
+    make: document.getElementById("make").value,
+    weight: document.getElementById("weight").value,
+    paymentDealer: document.getElementById("paymentDealer").value,
+    paymentCommission: document.getElementById("paymentCommission").value,
+    towing: document.getElementById("towing").value,
+    codBuyback: document.getElementById("codBuyback").value,
+    total: document.getElementById("total").value,
+    codNo: document.getElementById("codNo").value,
+    codAmount: document.getElementById("codAmount").value
+  });
 
-  function submitEntry() {
-    const type = document.getElementById("entryType").value;
-    const params = new URLSearchParams({
-      entryType: type,
-      vehicleNo: document.getElementById("vehicleNo").value,
-      place: document.getElementById("place").value,
-      make: document.getElementById("make").value,
-      weight: document.getElementById("weight").value,
-      paymentDealer: document.getElementById("paymentDealer").value,
-      paymentCommission: document.getElementById("paymentCommission").value,
-      towing: document.getElementById("towing").value,
-      codBuyback: document.getElementById("codBuyback").value,
-      total: document.getElementById("total").value,
-      codNo: document.getElementById("codNo").value,
-      codAmount: document.getElementById("codAmount").value
-    });
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec";
+  const fullURL = `${scriptURL}?${params.toString()}`;
+
+  // Redirect browser (or open new tab silently)
+  window.open(fullURL, "_blank");  // or use _self if you want to redirect
+
+  // Show feedback to user
+  document.getElementById("submitMsg").innerText = "✅ Entry submitted!";
+}
+
 
     const url = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec" + params.toString();
 
