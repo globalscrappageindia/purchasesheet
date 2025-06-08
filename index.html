@@ -101,44 +101,27 @@
   </section>
 
  <section id="download">
-  <h2>Download Sheets</h2>
-  <label>Select Date: <input type="date" id="pdfdate" /></label>
+  <h2>Download Purchase Sheets</h2>
+  <label>Select Date: <input type="date" id="pdfDate" /></label>
   <br><br>
   <button onclick="downloadPDF('full')">Download Full Sheet PDF</button>
   <button onclick="downloadPDF('trimmed')">Download Trimmed Sheet PDF</button>
+
+  <script>
+    function downloadPDF(type) {
+      const dateInput = document.getElementById("pdfDate").value;
+      if (!dateInput) {
+        alert("Please select a date.");
+        return;
+      }
+
+      // Build the URL with the script and date
+      const url = `https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec?exportType=${type}&date=${dateInput}`;
+      window.open(url, "_blank"); // Open the Drive link in new tab
+    }
+  </script>
 </section>
 
-<script>
-  function downloadPDF(type) {
-    const dateInput = document.getElementById("pdfdate").value;
-    if (!dateInput) {
-      alert("Please select a date.");
-      return;
-    }
-
-    // Format is already YYYY-MM-DD from <input type="date">
-    const url = `https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec?exportType=${type}&date=${dateInput}`;
-
-    // Fetch Drive link and open it in new tab
-    fetch(url)
-      .then(res => res.text())
-      .then(link => {
-        if (link === "NO_ENTRIES") {
-          alert("No matching entries found.");
-        } else {
-          window.open(link, "_blank");
-        }
-      })
-      .catch(err => {
-        console.error("Error fetching PDF link:", err);
-        alert("An error occurred while generating PDF.");
-      });
-  }
-</script>
-
-
-
-  </section>
 
   <section id="admin">
     <h2>Admin Panel</h2>
