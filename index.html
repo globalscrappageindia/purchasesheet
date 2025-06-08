@@ -102,24 +102,15 @@
 
  <section id="download">
   <h2>Download Purchase Sheets</h2>
-  <label>Select Date: <input type="date" id="pdfDate" /></label>
-  <br><br>
-  <button onclick="downloadPDF('full')">Download Full Sheet PDF</button>
-  <button onclick="downloadPDF('trimmed')">Download Trimmed Sheet PDF</button>
-
-  <script>
-    function downloadPDF(type) {
-      const dateInput = document.getElementById("pdfDate").value;
-      if (!dateInput) {
-        alert("Please select a date.");
-        return;
-      }
-
-      // Build the URL with the script and date
-      const url = `https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec?exportType=${type}&date=${dateInput}`;
-      window.open(url, "_blank"); // Open the Drive link in new tab
-    }
-  </script>
+  <div class="form-field">
+    <label for="pdfDate">Select Date:</label>
+    <input type="date" id="pdfDate" max="">
+  </div>
+  <div class="form-field">
+    <button onclick="downloadPDF('full')">Download Full Sheet PDF</button>
+    <button onclick="downloadPDF('trimmed')">Download Trimmed Sheet PDF</button>
+  </div>
+  <div id="downloadStatus" style="margin-top: 15px; color: green;"></div>
 </section>
 
 
@@ -230,20 +221,47 @@
 
   </script>
 
- <script>
+<script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec";
 
-  function getFormattedDate() {
-    const d = new Date();
-    return d.toISOString().split("T")[0]; // "YYYY-MM-DD"
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+    // Set max date in the date input
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("pdfDate").setAttribute("max", today);
+  });
 
   function downloadPDF(type) {
-    const date = getFormattedDate();
-    const url = `${SCRIPT_URL}?exportType=${type}&date=${date}`;
-    window.open(url, '_blank'); // Open in new tab to avoid CORS issue
+    const date = document.getElementById("pdfDate").value;
+    const status = document.getElementById("downloadStatus");
+    status.textContent = "";
+
+    if (!date) {
+      alert("Please select a date.");
+      return;
+    }
+
+    const url = `${SCRIPT_URL}?type=${type}&date=${date}`;
+    status.textContent = "Generating PDF… Please wait.";
+
+    fetch(url)
+      .then(res => res.text())
+      .then(link => {
+        const cleanUrl = link.trim();
+        if (cleanUrl.startsWith("http")) {
+          window.open(cleanUrl, '_blank');
+          status.textContent = "✅ PDF opened in new tab.";
+        } else if (cleanUrl === "NO_ENTRIES") {
+          status.textContent = "⚠️ No entries found for selected date.";
+        } else {
+          status.textContent = "❌ Error: " + cleanUrl;
+        }
+      })
+      .catch(err => {
+        status.textContent = "❌ Error: " + err.message;
+      });
   }
 </script>
+
 
 
 </body>
