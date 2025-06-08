@@ -109,20 +109,17 @@
 
 <script>
   function downloadPDF(type) {
-    const input = document.getElementById("pdfDate").value; // Assume input is in DD/MM/YYYY
-    if (!input) {
+    const date = document.getElementById("pdfdate").value; // Already in YYYY-MM-DD
+    if (!date) {
       alert("Please select a date.");
       return;
     }
 
-    // Convert DD/MM/YYYY → YYYY-MM-DD
-    const parts = input.split("/");
-    const formattedDate = `${parts[2]}-${parts[1].padStart(2, "0")}-${parts[0].padStart(2, "0")}`;
-
-    const url = `https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec?exportType=${type}&date=${formattedDate}`;
-    window.open(url, "_blank"); // Open in new tab
+    const url = `https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec?exportType=${type}&date=${date}`;
+    window.open(url, "_blank");
   }
 </script>
+
 
   </section>
 
