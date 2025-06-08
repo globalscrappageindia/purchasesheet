@@ -265,8 +265,7 @@ function checkPassword() {
     if (!date) {
       alert("Please select a date.");
       return;
-    }
-
+    }  
     const url = `${SCRIPT_URL}?type=${type}&date=${date}`;
     status.textContent = "Generating PDF… Please wait.";
 
@@ -275,8 +274,11 @@ function checkPassword() {
       .then(link => {
         const cleanUrl = link.trim();
         if (cleanUrl.startsWith("http")) {
-          window.open(cleanUrl, '_blank');
-          status.textContent = "✅ PDF opened in new tab.";
+         window.open(cleanUrl, '_blank');
+status.innerHTML = `✅ PDF opened in new tab.
+<br> If it didn’t, 
+<a href="${cleanUrl}" target="_blank">click here to open manually</a>.`;
+
         } else if (cleanUrl === "NO_ENTRIES") {
           status.textContent = "⚠️ No entries found for selected date.";
         } else {
@@ -404,8 +406,9 @@ function saveAllEdits() {
     .then(link => {
       const cleanUrl = link.trim();
       if (cleanUrl.startsWith("http")) {
-        window.open(cleanUrl, "_blank");
-        status.textContent = "✅ PDF opened in new tab.";
+       window.open(cleanUrl, "_blank");
+status.innerHTML = `✅ PDF opened in new tab.<br>If it didn’t, <a href="${cleanUrl}" target="_blank">click here to open manually</a>.`;
+
       } else if (cleanUrl === "NO_ENTRIES") {
         status.textContent = "⚠️ No entries found for this date.";
       } else {
