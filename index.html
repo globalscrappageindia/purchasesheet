@@ -107,6 +107,8 @@
 <button onclick="downloadPDF('full')">Download Full Sheet PDF</button>
 <button onclick="downloadPDF('trimmed')">Download Trimmed Sheet PDF</button>
 
+
+
   </section>
 
   <section id="admin">
@@ -215,5 +217,22 @@
 }
 
   </script>
+
+ <script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvpcnumzvkgp03BoYQLXdcczkjDYb6ZxOTCB51pRlJE-3xjSRQfnUhg9amAzYzEktL/exec";
+
+  function getFormattedDate() {
+    const d = new Date();
+    return d.toISOString().split("T")[0]; // "YYYY-MM-DD"
+  }
+
+  function downloadPDF(type) {
+    const date = getFormattedDate();
+    const url = `${SCRIPT_URL}?exportType=${type}&date=${date}`;
+    window.open(url, '_blank'); // Open in new tab to avoid CORS issue
+  }
+</script>
+
+
 </body>
 </html>
